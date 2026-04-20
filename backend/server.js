@@ -1,35 +1,69 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+// Import modules
+const express = require("express");
+const cors = require("cors");
+const fs = require("fs");
 
-const authRoutes = require('./routes/authRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const facultyRoutes = require('./routes/facultyRoutes');
-
+// Create app
 const app = express();
 
-// Middleware
+// Middleware (IMPORTANT ORDER)
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/faculty', facultyRoutes);
+// File to store users
+const FILE = "users.json";
 
-// Base route
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to Faculty Academic Performance Dashboard API' });
+// Create file if not exists
+if (!fs.existsSync(FILE)) {
+    fs.writeFileSync(FILE, JSON.stringify([]));
+}
+
+// ================= REGISTER =================
+app.post("/register", (req, res) => {
+    console.log("Register request:", req.body);
+
+    const { name, email, password } = req.body;
+
+    const users = JSON.parse(fs.readFileSync(FILE));
+
+    // Check if user already exists
+    const exists = users.find(u => u.email === email);
+    if (exists) {
+        return res.send("User already exists ❌");
+    }
+
+    users.push({ name, email, password });
+
+    fs.writeFileSync(FILE, JSON.stringify(users, null, 2));
+
+    res.send("User registered successfully ✅");
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!', error: err.message });
+// ================= LOGIN =================
+app.post("/login", (req, res) => {
+    console.log("Login request:", req.body);
+
+    const { email, password } = req.body;
+
+    const users = JSON.parse(fs.readFileSync(FILE));
+
+    const user = users.find(
+        u => u.email === email && u.password === password
+    );
+
+    if (user) {
+        res.send("Login successful ✅");
+    } else {
+        res.status(401).send("Invalid email or password ❌");
+    }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+// Test route (IMPORTANT for checking connection)
+app.get("/", (req, res) => {
+    res.send("Server is working 🚀");
+});
+
+// Start server
+app.listen(5000, () => {
+    console.log("Server running on port 5000");
 });
