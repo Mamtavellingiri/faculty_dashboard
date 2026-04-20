@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FAPD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Chart.js for premium dynamic charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="navbar-brand">FAPD Admin</a>
+        <div class="navbar-user">
+            <span id="userEmail" style="font-weight: 500; color: var(--gray-700);">admin@fapd.edu</span>
+            <button onclick="handleLogout()" class="logout-btn">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        
+        <div class="grid" style="margin-bottom: 2rem;">
+            <div class="metric-card">
+                <div class="metric-title">Total Faculty</div>
+                <div class="metric-value" id="totalFaculty">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Average Score</div>
+                <div class="metric-value" id="avgScore">0.0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Total Publications</div>
+                <div class="metric-value" id="totalPublications">0</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 style="font-size: 1.25rem;">Faculty Performance Overview</h2>
+            </div>
+            <div class="table-container">
+                <table id="facultyTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Latest Year</th>
+                            <th>Latest Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facultyTableBody">
+                        <!-- Data populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
